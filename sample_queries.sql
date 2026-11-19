@@ -22,7 +22,7 @@ SeasonPoints AS (
 ),
 DriverAverages AS (
   SELECT driverId, year,totalPoints,
-    AVG(totalPoints) OVER (PARTITION BY DriverId) AS averagePoints
+    AVG(totalPoints) OVER (PARTITION BY driverId) AS averagePoints
   FROM SeasonPoints
 )
 SELECT
@@ -152,11 +152,12 @@ RankedDrivers AS (
 )
 SELECT
   driverId,
-  driverName,
+  forename,
+  surname,
   totalRaces,
   averagePosition
 FROM RankedDrivers
-WHERE ranking = 1;
+WHERE ranking = 1 and r.position IS NOT NULL;
 
 
 -- query 14
