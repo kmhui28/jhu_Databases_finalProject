@@ -136,7 +136,7 @@ WITH GermanDriverStats AS (
   JOIN results r ON d.driverId = r.driverId
   JOIN races ra ON r.raceId = ra.raceId
   JOIN circuits ci ON ra.circuitId = ci.circuitId
-  WHERE ci.country = 'Germany'
+  WHERE ci.country = 'Germany' AND r.position IS NOT NULL
   GROUP BY
     d.driverId,
     d.forename,
@@ -157,7 +157,7 @@ SELECT
   totalRaces,
   averagePosition
 FROM RankedDrivers
-WHERE ranking = 1 and r.position IS NOT NULL;
+WHERE ranking = 1;
 
 
 -- query 14
