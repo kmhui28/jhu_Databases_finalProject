@@ -186,8 +186,8 @@ RankedCombinations AS (
   FROM CombinationStats
 )
 SELECT
-  d.forename,
-  d.surname,
+  d.forename AS driverFName,
+  d.surname AS driverLName,
   c.name AS constructorName,
   ci.name AS circuitName,
   cs.totalStarts,
