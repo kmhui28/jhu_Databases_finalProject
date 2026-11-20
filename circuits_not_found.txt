@@ -1,4 +1,0 @@
-43  http://dbpedia.org/resource/Long_Beach,_California
-44  http://dbpedia.org/resource/Las_Vegas_Street_Circuit
-54  http://dbpedia.org/resource/Circuit_de_la_Sarthe#Bugatti_Circuit
-80  http://dbpedia.org/resource/Las_Vegas_Grand_Prix#Circuit
