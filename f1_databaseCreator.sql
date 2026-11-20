@@ -1,12 +1,12 @@
 --Create Tables correpsonding to each CSV!--
 
-drop table seasons;
+drop table IF EXISTS seasons;
 CREATE TABLE seasons (
     year  INT PRIMARY KEY CHECK (year BETWEEN 1950 AND 2100),
     url   VARCHAR(255)
 );
 
-drop table circuits;
+drop table IF EXISTS circuits;
 CREATE TABLE circuits (
     circuitId   INT PRIMARY KEY,
     circuitRef  VARCHAR(50)  NOT NULL UNIQUE,
@@ -19,7 +19,7 @@ CREATE TABLE circuits (
     url         VARCHAR(255)
 );
 
-drop table constructors;
+drop table IF EXISTS constructors;
 CREATE TABLE constructors (
     constructorId   INT PRIMARY KEY,
     constructorRef  VARCHAR(50)  NOT NULL UNIQUE,
@@ -28,7 +28,7 @@ CREATE TABLE constructors (
     url             VARCHAR(255)
 );
 
-drop table drivers;
+drop table IF EXISTS drivers;
 CREATE TABLE drivers (
     driverId    INT PRIMARY KEY,
     driverRef   VARCHAR(50)  NOT NULL UNIQUE,
@@ -41,13 +41,13 @@ CREATE TABLE drivers (
     url         VARCHAR(255)
 );
 
-drop table status;
+drop table IF EXISTS status;
 CREATE TABLE status (
     statusId  INT PRIMARY KEY,
     status    VARCHAR(50) NOT NULL       
 );
 
-drop table races;
+drop table IF EXISTS races;
 CREATE TABLE races (
     raceId     INT PRIMARY KEY,
     year       INT NOT NULL,
@@ -62,7 +62,7 @@ CREATE TABLE races (
     FOREIGN KEY (circuitId) REFERENCES circuits(circuitId)
 );
 
-drop table results;
+drop table IF EXISTS results;
 CREATE TABLE results (
     resultId         INT PRIMARY KEY,
     raceId           INT NOT NULL,
@@ -89,7 +89,7 @@ CREATE TABLE results (
     FOREIGN KEY (statusId)      REFERENCES status(statusId)
 );
 
-drop table sprint_results;
+drop table IF EXISTS sprint_results;
 CREATE TABLE sprint_results (
     resultId         INT PRIMARY KEY,
     raceId           INT NOT NULL,
@@ -113,7 +113,7 @@ CREATE TABLE sprint_results (
     FOREIGN KEY (statusId)      REFERENCES status(statusId)
 );
 
-drop table qualifying;
+drop table IF EXISTS qualifying;
 CREATE TABLE qualifying (
     qualifyId      INT PRIMARY KEY,
     raceId         INT NOT NULL,
@@ -130,7 +130,7 @@ CREATE TABLE qualifying (
     FOREIGN KEY (constructorId) REFERENCES constructors(constructorId)
 );
 
-drop table lap_times;
+drop table IF EXISTS lap_times;
 CREATE TABLE lap_times (
     raceId        INT NOT NULL,
     driverId      INT NOT NULL,
@@ -143,7 +143,7 @@ CREATE TABLE lap_times (
     FOREIGN KEY (driverId) REFERENCES drivers(driverId)
 );
 
-drop table pit_stops;
+drop table IF EXISTS pit_stops;
 CREATE TABLE pit_stops (
     raceId        INT NOT NULL,
     driverId      INT NOT NULL,
@@ -157,7 +157,7 @@ CREATE TABLE pit_stops (
     FOREIGN KEY (driverId) REFERENCES drivers(driverId)
 );
 
-drop table driver_standings;
+drop table IF EXISTS driver_standings;
 CREATE TABLE driver_standings (
     driverStandingsId  INT PRIMARY KEY,
     raceId             INT NOT NULL,
@@ -171,7 +171,7 @@ CREATE TABLE driver_standings (
     FOREIGN KEY (driverId) REFERENCES drivers(driverId)
 );
 
-drop table constructor_standings;
+drop table IF EXISTS constructor_standings;
 CREATE TABLE constructor_standings (
     constructorStandingsId  INT PRIMARY KEY,
     raceId                  INT NOT NULL,
@@ -185,7 +185,7 @@ CREATE TABLE constructor_standings (
     FOREIGN KEY (constructorId) REFERENCES constructors(constructorId)
 );
 
-drop table constructor_results;
+drop table IF EXISTS constructor_results;
 CREATE TABLE constructor_results (
     constructorResultsId  INT PRIMARY KEY,
     raceId                INT NOT NULL,
@@ -194,4 +194,20 @@ CREATE TABLE constructor_results (
     status                VARCHAR(10),     
     FOREIGN KEY (raceId)        REFERENCES races(raceId),
     FOREIGN KEY (constructorId) REFERENCES constructors(constructorId)
+);
+
+DROP TABLE IF EXISTS circuit_details;
+
+CREATE TABLE circuit_details (
+    circuitId   INT NOT NULL,
+    surface     VARCHAR(50),
+    km          DECIMAL(5,3) NOT NULL CHECK (km > 0),
+    turns       INT CHECK (turns > 0),
+    yearOpen    INT NOT NULL CHECK (yearOpen BETWEEN 1900 AND 2100),
+    yearClosed  INT,                          -- NULL = still in use
+    raceRecord  VARCHAR(10)
+                CHECK (raceRecord REGEXP '^[0-9]:[0-5][0-9][.][0-9]{3}$'),
+    PRIMARY KEY (circuitId, yearOpen),
+    CHECK (yearClosed IS NULL OR yearClosed >= yearOpen),
+    FOREIGN KEY (circuitId) REFERENCES circuits(circuitId)
 );
